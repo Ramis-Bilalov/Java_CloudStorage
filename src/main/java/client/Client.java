@@ -23,7 +23,6 @@ public class Client {
         frame.setSize(400, 300);
 
         JTextArea ta = new JTextArea();
-
         JButton uploadButton = new JButton("Upload");
 
         frame.getContentPane().add(BorderLayout.CENTER, ta);
