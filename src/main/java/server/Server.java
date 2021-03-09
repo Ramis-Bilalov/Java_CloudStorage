@@ -8,10 +8,11 @@ import java.util.concurrent.Executors;
 public class Server {
     public Server() {
         ExecutorService service = Executors.newFixedThreadPool(4);
-        try (ServerSocket server = new ServerSocket(1235)){
-            System.out.println("Server started");
-            while (true) {
+        try(ServerSocket server = new ServerSocket(1234)){
+            System.out.println("Server is started");
+            while(true) {
                 service.execute(new ClientHandler(server.accept()));
+                System.out.println("Client is connected");
             }
         } catch (IOException e) {
             e.printStackTrace();
