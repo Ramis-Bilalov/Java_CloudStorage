@@ -24,10 +24,11 @@ public class NioTelnetServer {
     public static final String RM_COMMAND = "\trm\t\tremove file [rm path/fileName]\n\r";
     public static final String COPY_COMMAND = "\tcopy\t\tcopy file to directory [copy from-->to]\n\r";
     public static final String CAT_COMMAND = "\tcat\t\tread file [cat path/filename]\n\r";
+    private Path path = Paths.get("client");
 
     public NioTelnetServer() throws IOException {
         ServerSocketChannel server = ServerSocketChannel.open(); // открыли
-        server.bind(new InetSocketAddress(1235));
+        server.bind(new InetSocketAddress(1237));
         server.configureBlocking(false); // ВАЖНО
         Selector selector = Selector.open();
         server.register(selector, SelectionKey.OP_ACCEPT);
@@ -72,6 +73,7 @@ public class NioTelnetServer {
         // copy (src, target) - копирование файла
         // cat (имя файла) - вывод в консоль содержимого
 
+        StringBuilder sbb = new StringBuilder();
 
 
         if (key.isValid()) {
@@ -99,9 +101,9 @@ public class NioTelnetServer {
                 for (int i = 6; i < array.length; i++) {
                     fileName.append(array[i]);
                 }
-                Path path = Paths.get("client", fileName.toString());
-                if(!Files.exists(path)) {
-                    Files.createFile(path);
+                Path path1 = Paths.get(path.toString(), fileName.toString());
+                if(!Files.exists(path1)) {
+                    Files.createFile(path1);
                     sendMessage("File in path " + fileName + " is created\n\r", selector);
                 }
             }
@@ -111,26 +113,21 @@ public class NioTelnetServer {
                 for (int i = 6; i < array.length; i++) {
                     dirName.append(array[i]);
                 }
-                Path path = Paths.get("client", dirName.toString());
-                if(!Files.exists(path)) {
-                    Files.createDirectories(Path.of("client", dirName.toString()));
+                Path path2 = Paths.get(path.toString(), dirName.toString());
+                if(!Files.exists(path2)) {
+                    Files.createDirectories(Path.of(path.toString(), dirName.toString()));
                     sendMessage("Directory " + dirName + " is created\n\r", selector);
                 }
             }
             else if(command.startsWith("cd")) {
+                path = Paths.get("client");
+                System.out.println(sbb);
                 StringBuilder searchFile = new StringBuilder();
                 char[] array = command.toCharArray();
                 for (int i = 3; i < array.length; i++) {
                     searchFile.append(array[i]);
                 }
-                Path path = Paths.get("client");
-                Files.walkFileTree(path, new SimpleFileVisitor<>() {
-                    @Override
-                    public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                        sendMessage(dir.getFileName().toString() + File.separator, selector);
-                        return FileVisitResult.CONTINUE;
-                    }
-                });
+                path = Path.of(path.toString(), String.valueOf(searchFile));
             }
             else if(command.startsWith("rm")) {
                 StringBuilder deleteFile = new StringBuilder();
@@ -139,9 +136,9 @@ public class NioTelnetServer {
                     deleteFile.append(array[i]);
                 }
                 System.out.println(deleteFile);
-                Path path = Path.of("client", String.valueOf(deleteFile));
-                if(Files.exists(path)) {
-                    Files.delete(path);
+                Path path4 = Path.of(path.toString(), String.valueOf(deleteFile));
+                if(Files.exists(path4)) {
+                    Files.delete(path4);
                     sendMessage("File in path " + deleteFile + " is deleted\n\r", selector);
                 }
             }
@@ -152,15 +149,15 @@ public class NioTelnetServer {
                     copyFile.append(array[i]);
                 }
                 String[] array1 = copyFile.toString().split("-->");
-                Path source = Path.of("client" + File.separator + array1[0]);
-                Path target = Path.of("client" + File.separator + array1[1]);
+                Path source = Path.of(path.toString() + File.separator + array1[0]);
+                Path target = Path.of(path.toString() + File.separator + array1[1]);
                 if(Files.exists(source)) {
-                    Path path = Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
+                    Path path5 = Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
                     sendMessage("File in path " + source + " is copied to " + target + "\n\r", selector);
                 }
                 else if(!Files.exists(source)) {
                     Files.createFile(source);
-                    Path path = Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
+                    Path path6 = Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
                     sendMessage("File from " + source + " is copied to " + target + "\n\r", selector);
                 }
             }
@@ -170,8 +167,8 @@ public class NioTelnetServer {
                 for (int i = 4; i < array.length; i++) {
                     fileName.append(array[i]);
                 }
-                if(Files.exists(Path.of("client", String.valueOf(fileName)))) {
-                    List<String> list = Files.newBufferedReader(Path.of("client", String.valueOf(fileName)))
+                if(Files.exists(Path.of(path.toString(), String.valueOf(fileName)))) {
+                    List<String> list = Files.newBufferedReader(Path.of(path.toString(), String.valueOf(fileName)))
                             .lines().collect(Collectors.toList());
                     sendMessage(list.toString(), selector);
                 }
