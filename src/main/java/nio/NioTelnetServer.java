@@ -118,8 +118,12 @@ public class NioTelnetServer {
                 }
                 Path path2 = Paths.get(serverPath.toString(), dirName.toString());
                 if(!Files.exists(path2)) {
-                    Files.createDirectories(Path.of(serverPath.toString(), dirName.toString()));
-                    sendMessage("Directory " + dirName.toString() + " is created\n\r", selector);
+                    if(!Files.exists(Path.of(serverPath.toString(), dirName.toString()))) {
+                        Files.createDirectories(Path.of(serverPath.toString(), dirName.toString()));
+                        sendMessage("Directory " + dirName.toString() + " is created\n\r", selector);
+                    }
+                } else if(Files.exists(path2)) {
+                    sendMessage("Directory is already exists", selector);
                 }
             }
             else if(command.startsWith("cd")) {                                                 // Команда cd
@@ -161,12 +165,20 @@ public class NioTelnetServer {
                     Path source = Path.of(serverPath + File.separator + array1[0]);
                     if (Files.exists(source)) {
                         if (!Files.exists(target)) {
-                            Files.createDirectories(target);
+                            sendMessage("This directory is not exists", selector);
                         }
                         if (Files.exists(target)) {
+                            if(!Files.exists(Path.of(String.valueOf(target), array1[0]))) {
+                                try {
+                                    Files.createFile(Path.of(String.valueOf(target), array1[0]));
+                                } catch (NoSuchFileException n) {
+                                    sendMessage("This command is incorrect", selector);
+                                    n.printStackTrace();
+                                }
+                            }
                             try {
-                                Path path5 = Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
-                                sendMessage("File in path " + source + " is copied to " + target + "\n\r", selector);
+                                Path path5 = Files.copy(source, Path.of(String.valueOf(target), array1[0]), StandardCopyOption.REPLACE_EXISTING);
+                                sendMessage("File " + array1[0] + " is copied from " + source + " to " + target + "\n\r", selector);
                             } catch (NoSuchFileException e) {
                                 e.printStackTrace();
                             }
@@ -211,11 +223,10 @@ public class NioTelnetServer {
     }
 
     private String getFilesList() throws IOException {
-        String path = "server";
-        if(!Files.exists(Path.of(path))) {
-            Files.createDirectories(Path.of(path));
+        if(!Files.exists(serverPath)) {
+            Files.createDirectories(serverPath);
         }
-        return String.join("\t", new File(path).list());
+        return String.join("\t", new File(String.valueOf(serverPath)).list());
     }
 
     private void sendMessage(String message, Selector selector) throws IOException {
