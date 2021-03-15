@@ -10,21 +10,20 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class NioTelnetServer {
-    private final ByteBuffer buffer = ByteBuffer.allocate(512);
 
+    private final ByteBuffer buffer = ByteBuffer.allocate(512);
     public static final String LS_COMMAND = "\tls\t\tview all files from current directory\n\r";
     public static final String TOUCH_COMMAND = "\ttouch\t\tcreate new file [touch path/filename]\n\r";
     public static final String MKDIR_COMMAND = "\tmkdir\t\tcreate the directory(ies) [create directoryName]\n\r";
     public static final String CD_COMMAND = "\tcd\t\tfile walk tree [cd path]\n\r";
     public static final String RM_COMMAND = "\trm\t\tremove file [rm path/fileName]\n\r";
-    public static final String COPY_COMMAND = "\tcopy\t\tcopy file to directory [copy from-->to]\n\r";
+    public static final String COPY_COMMAND = "\tcopy\t\tcopy file to directory [copy filename to]\n\r";
     public static final String CAT_COMMAND = "\tcat\t\tread file [cat path/filename]\n\r";
-    private Path path = Paths.get("client");
+    public static final String EXIT_COMMAND = "\texit\t\texit\n\r";
+    private Path serverPath = Paths.get("server");
 
     public NioTelnetServer() throws IOException {
         ServerSocketChannel server = ServerSocketChannel.open(); // открыли
@@ -80,7 +79,7 @@ public class NioTelnetServer {
             String command = sb.toString()
                     .replace("\n", "")
                     .replace("\r", "");
-            if ("--help".equals(command)) {
+            if ("--help".equals(command)) {                                                     // Команда help
                 sendMessage(LS_COMMAND, selector);
                 sendMessage(TOUCH_COMMAND, selector);
                 sendMessage(MKDIR_COMMAND, selector);
@@ -88,90 +87,113 @@ public class NioTelnetServer {
                 sendMessage(RM_COMMAND, selector);
                 sendMessage(COPY_COMMAND, selector);
                 sendMessage(CAT_COMMAND, selector);
-            } else if ("ls".equals(command)) {
+                sendMessage(EXIT_COMMAND, selector);
+            } else if ("ls".equals(command)) {                                                  // Команда ls
                 sendMessage(getFilesList().concat("\n"), selector);
-            } else if ("exit".equals(command)) {
+            } else if ("exit".equals(command)) {                                                // Команда exit
                 System.out.println("Client logged out. IP: " + channel.getRemoteAddress());
                 channel.close();
                 return;
             }
-            else if(command.startsWith("touch")) {
+            else if(command.startsWith("touch")) {                                              // Команда touch
                 StringBuilder fileName = new StringBuilder();
                 char[] array = command.toCharArray();
                 for (int i = 6; i < array.length; i++) {
                     fileName.append(array[i]);
                 }
-                Path path1 = Paths.get(path.toString(), fileName.toString());
+                if(!Files.exists(serverPath)) {
+                    Files.createDirectories(serverPath);
+                }
+                Path path1 = Paths.get(serverPath.toString(), fileName.toString());
                 if(!Files.exists(path1)) {
                     Files.createFile(path1);
-                    sendMessage("File in path " + fileName + " is created\n\r", selector);
-                }
+                    sendMessage("File " + fileName + " is created " + "in " + path1 + "\r\n", selector);
+                } else sendMessage("File is already exists", selector);
             }
-            else if(command.startsWith("mkdir")) {
+            else if(command.startsWith("mkdir")) {                                              // Команда mkdir
                 StringBuilder dirName = new StringBuilder();
                 char[] array = command.toCharArray();
                 for (int i = 6; i < array.length; i++) {
                     dirName.append(array[i]);
                 }
-                Path path2 = Paths.get(path.toString(), dirName.toString());
+                Path path2 = Paths.get(serverPath.toString(), dirName.toString());
                 if(!Files.exists(path2)) {
-                    Files.createDirectories(Path.of(path.toString(), dirName.toString()));
-                    sendMessage("Directory " + dirName + " is created\n\r", selector);
+                    Files.createDirectories(Path.of(serverPath.toString(), dirName.toString()));
+                    sendMessage("Directory " + dirName.toString() + " is created\n\r", selector);
                 }
             }
-            else if(command.startsWith("cd")) {
-                path = Paths.get("client");
-                System.out.println(sbb);
-                StringBuilder searchFile = new StringBuilder();
-                char[] array = command.toCharArray();
-                for (int i = 3; i < array.length; i++) {
-                    searchFile.append(array[i]);
+            else if(command.startsWith("cd")) {                                                 // Команда cd
+                String[] array = command.split(" ");
+                if(Files.exists(Path.of(array[1]))) {
+                    serverPath = Path.of(String.valueOf(serverPath), array[1]);
                 }
-                path = Path.of(path.toString(), String.valueOf(searchFile));
+                if(!Files.exists(Path.of(array[1]))) {
+                    serverPath = Files.createDirectories(Path.of(String.valueOf(serverPath), array[1]));
+                }
             }
-            else if(command.startsWith("rm")) {
+            else if(command.startsWith("rm")) {                                                 // Команда rm
                 StringBuilder deleteFile = new StringBuilder();
                 char[] array = command.toCharArray();
                 for (int i = 3; i < array.length; i++) {
                     deleteFile.append(array[i]);
                 }
-                System.out.println(deleteFile);
-                Path path4 = Path.of(path.toString(), String.valueOf(deleteFile));
+                if(!Files.exists(serverPath)) {
+                    Files.createDirectories(serverPath);
+                }
+                Path path4 = Path.of(serverPath.toString(), String.valueOf(deleteFile));
                 if(Files.exists(path4)) {
                     Files.delete(path4);
-                    sendMessage("File in path " + deleteFile + " is deleted\n\r", selector);
-                }
+                    sendMessage("File " + deleteFile + " is deleted " + "in " + path4 + "\r\n", selector);
+                } else sendMessage("File " + deleteFile + " is not exists " + "in " + path4 + "\r\n", selector);
             }
-            else if(command.startsWith("copy")) {
+            else if(command.startsWith("copy")) {                                               // Команда copy
                 StringBuilder copyFile = new StringBuilder();
                 char[] array = command.toCharArray();
                 for (int i = 5; i < array.length; i++) {
                     copyFile.append(array[i]);
                 }
-                String[] array1 = copyFile.toString().split("-->");
-                Path source = Path.of(path.toString() + File.separator + array1[0]);
-                Path target = Path.of(path.toString() + File.separator + array1[1]);
-                if(Files.exists(source)) {
-                    Path path5 = Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
-                    sendMessage("File in path " + source + " is copied to " + target + "\n\r", selector);
+                if(!Files.exists(serverPath)) {
+                    Files.createDirectories(serverPath);
                 }
-                else if(!Files.exists(source)) {
-                    Files.createFile(source);
-                    Path path6 = Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
-                    sendMessage("File from " + source + " is copied to " + target + "\n\r", selector);
+                try {
+                    String[] array1 = copyFile.toString().split(" ");
+                    Path target = Path.of(serverPath + File.separator + array1[1]);
+                    Path source = Path.of(serverPath + File.separator + array1[0]);
+                    if (Files.exists(source)) {
+                        if (!Files.exists(target)) {
+                            Files.createDirectories(target);
+                        }
+                        if (Files.exists(target)) {
+                            try {
+                                Path path5 = Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
+                                sendMessage("File in path " + source + " is copied to " + target + "\n\r", selector);
+                            } catch (NoSuchFileException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    } else if (!Files.exists(source)) {
+                        sendMessage(source + " is not exists in server \n\r", selector);
+                    }
+
+                } catch (ArrayIndexOutOfBoundsException a) {
+                    sendMessage("The command is incorrect", selector);
                 }
             }
-            else if(command.startsWith("cat")) {
+            else if(command.startsWith("cat")) {                                                // Команда cat
                 StringBuilder fileName = new StringBuilder();
                 char[] array = command.toCharArray();
                 for (int i = 4; i < array.length; i++) {
                     fileName.append(array[i]);
                 }
-                if(Files.exists(Path.of(path.toString(), String.valueOf(fileName)))) {
-                    List<String> list = Files.newBufferedReader(Path.of(path.toString(), String.valueOf(fileName)))
-                            .lines().collect(Collectors.toList());
-                    sendMessage(list.toString(), selector);
-                }
+                if(Files.exists(Path.of(serverPath.toString(), String.valueOf(fileName)))) {
+                    List<String> list = Files.readAllLines(Path.of(serverPath.toString(), String.valueOf(fileName)));
+                    StringBuilder readFile = new StringBuilder();
+                    for(String line : list) {
+                        readFile.append(line);
+                        readFile.append("\n\r");
+                    }
+                    sendMessage(String.valueOf(readFile), selector);
+                } else sendMessage("File " + fileName + " is not exists in server", selector);
             }
         }
         sendMessage("\n\r", selector);
@@ -188,8 +210,12 @@ public class NioTelnetServer {
         );
     }
 
-    private String getFilesList() {
-        return String.join("\t", new File("server").list());
+    private String getFilesList() throws IOException {
+        String path = "server";
+        if(!Files.exists(Path.of(path))) {
+            Files.createDirectories(Path.of(path));
+        }
+        return String.join("\t", new File(path).list());
     }
 
     private void sendMessage(String message, Selector selector) throws IOException {
@@ -212,5 +238,6 @@ public class NioTelnetServer {
 
     public static void main(String[] args) throws IOException {
         new NioTelnetServer();
+
     }
 }
