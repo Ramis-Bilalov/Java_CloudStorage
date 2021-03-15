@@ -28,6 +28,8 @@ public class NioTelnetServer {
     public NioTelnetServer() throws IOException {
         ServerSocketChannel server = ServerSocketChannel.open(); // открыли
         server.bind(new InetSocketAddress(1237));
+
+
         server.configureBlocking(false); // ВАЖНО
         Selector selector = Selector.open();
         server.register(selector, SelectionKey.OP_ACCEPT);
@@ -73,8 +75,6 @@ public class NioTelnetServer {
         // cat (имя файла) - вывод в консоль содержимого
 
         StringBuilder sbb = new StringBuilder();
-
-
         if (key.isValid()) {
             String command = sb.toString()
                     .replace("\n", "")
@@ -91,6 +91,7 @@ public class NioTelnetServer {
             } else if ("ls".equals(command)) {                                                  // Команда ls
                 sendMessage(getFilesList().concat("\n"), selector);
             } else if ("exit".equals(command)) {                                                // Команда exit
+
                 System.out.println("Client logged out. IP: " + channel.getRemoteAddress());
                 channel.close();
                 return;
@@ -111,6 +112,8 @@ public class NioTelnetServer {
                 } else sendMessage("File is already exists", selector);
             }
             else if(command.startsWith("mkdir")) {                                              // Команда mkdir
+
+
                 StringBuilder dirName = new StringBuilder();
                 char[] array = command.toCharArray();
                 for (int i = 6; i < array.length; i++) {
@@ -209,6 +212,8 @@ public class NioTelnetServer {
             }
         }
         sendMessage("\n\r", selector);
+
+
         sendName(channel);
     }
 
@@ -221,12 +226,13 @@ public class NioTelnetServer {
                 )
         );
     }
-
     private String getFilesList() throws IOException {
         if(!Files.exists(serverPath)) {
             Files.createDirectories(serverPath);
         }
         return String.join("\t", new File(String.valueOf(serverPath)).list());
+
+
     }
 
     private void sendMessage(String message, Selector selector) throws IOException {
@@ -245,6 +251,8 @@ public class NioTelnetServer {
         channel.register(selector, SelectionKey.OP_READ, "some attach");
         channel.write(ByteBuffer.wrap("Hello user! \n\r".getBytes(StandardCharsets.UTF_8)));
         channel.write(ByteBuffer.wrap("Enter --help for support info \n\r".getBytes(StandardCharsets.UTF_8)));
+
+
     }
 
     public static void main(String[] args) throws IOException {
