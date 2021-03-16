@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.file.*;
 
 public class NetworkService {
 
@@ -45,32 +46,37 @@ public class NetworkService {
         } return observableList;
     }
 
-    public void sendFile(String fileName, String from, String to, String command) {
+    public ObservableList<String> getDirectories(String path) {
+        ObservableList<String> observableDirList = FXCollections.observableArrayList();
+        //File folder = new File(path);
+        //File[] listOfFiles = folder.listFiles();
+        String[] listt = new File(String.valueOf(path)).list();
+        for (String file : listt) {
+            observableDirList.add(file);
+        } return observableDirList;
+    }
+
+    public void sendFile(String fileName, String from, String to) {
         try {
             File file = new File(from + File.separator + fileName);
             if(file.exists()) {
-                os.writeUTF(command);
-                os.writeUTF(fileName);
-                long length = file.length();
-                os.writeLong(length);
-                FileInputStream fis = new FileInputStream(file);
-                int read = 0;
-                byte[] buffer = new byte[256];
-                while ((read = fis.read(buffer))!= -1) {
-                    os.write(buffer, 0, read);
+                if(!Files.exists(Path.of(to, fileName))) {
+                    Files.copy(Path.of(from, fileName), Path.of(to, fileName), StandardCopyOption.REPLACE_EXISTING);
+                    System.out.println("File " + fileName + " is uploaded from " + from + " to " + to);
                 }
-                fis.close();
-                System.out.println("File " + fileName + " uploaded from " + from + " to " + to);
-                os.flush();
+            } if(!file.exists()) {
+                System.out.println("File " + fileName + " is not exists in " + from);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Please enter the filename!");
+            //e.printStackTrace();
         }
     }
 
     public void deleteFile(String fileName, String from) {
         File file = new File(from + File.separator + fileName);
-        if(file.delete()) {
+        if(file.exists()) {
+            file.delete();
             System.out.println("File " + fileName + " is deleted from " + from);
         } else System.out.println("This file is not exists");
     }
