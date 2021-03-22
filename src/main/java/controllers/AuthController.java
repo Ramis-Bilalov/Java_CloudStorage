@@ -13,7 +13,10 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Path;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class AuthController implements Initializable {
@@ -25,13 +28,9 @@ public class AuthController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
     }
 
-    public void enter(ActionEvent actionEvent) throws IOException {
+    public void enter(ActionEvent actionEvent) throws IOException, SQLException, ClassNotFoundException {
         boolean auth = false;
-        try {
-            auth = UserSQLiteDao.getInstance().userExists(login.getText(), password.getText());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        auth = UserSQLiteDao.getInstance().userExists(login.getText(), password.getText());
         if (auth) {
             System.out.println("правильный пароль");
             Parent client = FXMLLoader.load(getClass().getResource("client.fxml"));

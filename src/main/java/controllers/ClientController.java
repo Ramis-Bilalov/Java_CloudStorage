@@ -67,8 +67,12 @@ public class ClientController implements Initializable {
     }
 
     public void refreshLists() {
-        clientList.setItems(NetworkService.getInstance().getDirectories("client"));
-        serverList.setItems(NetworkService.getInstance().getDirectories(path));
+        try {
+            clientList.setItems(NetworkService.getInstance().getDirectories("client"));
+            serverList.setItems(NetworkService.getInstance().getDirectories(path));
+        } catch (NullPointerException n) {
+            n.printStackTrace();
+        }
     }
 
     public void uploadFromClientToServer(ActionEvent actionEvent) {
@@ -78,6 +82,13 @@ public class ClientController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        if (!Files.exists(Path.of("client"))) {
+            try {
+                Files.createDirectories(Path.of("client"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         if (!Files.exists(Path.of("server"))) {
             try {
                 Files.createDirectories(Path.of("server"));
@@ -99,8 +110,13 @@ public class ClientController implements Initializable {
                 e.printStackTrace();
             }
         }
-        observableClientList.addAll(NetworkService.getInstance().getFiles("client"));
-        observableServerList.addAll(NetworkService.getInstance().getDirectories("server"));
+        try {
+            observableClientList.addAll(NetworkService.getInstance().getFiles("client"));
+            observableServerList.addAll(NetworkService.getInstance().getDirectories("server"));
+        } catch (NullPointerException n) {
+            n.printStackTrace();
+        }
+
         path = "server";
         serverList.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
@@ -129,9 +145,13 @@ public class ClientController implements Initializable {
     }
 
     public void returnFromDirectory(ActionEvent actionEvent) {
+        try {
         clientList.setItems(NetworkService.getInstance().getDirectories("client"));
         serverList.setItems(NetworkService.getInstance().getDirectories("server"));
         path = "server";
+        } catch (NullPointerException n) {
+            n.printStackTrace();
+        }
     }
 
     public void createDirectory(ActionEvent actionEvent) throws IOException {
