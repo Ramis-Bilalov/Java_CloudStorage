@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="308.0" prefWidth="371.0" style="-fx-background-color: #FAFAFA;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.RegistrationController">
+    <children>
+        <Label layoutX="115.0" layoutY="14.0" text="Регистрация" textFill="DIMGRAY">
+            <font>
+                <Font name="System Bold" size="23.0" />
+            </font>
+        </Label>
+        <Label layoutX="76.0" layoutY="75.0" text="Имя">
+            <font>
+                <Font name="System Bold" size="12.0" />
+            </font>
+        </Label>
+        <Label layoutX="48.0" layoutY="111.0" text="Фамилия">
+            <font>
+                <Font name="System Bold" size="12.0" />
+            </font>
+        </Label>
+        <TextField fx:id="name" layoutX="114.0" layoutY="71.0" prefHeight="26.0" prefWidth="201.0" promptText="Введите имя:" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #696969;" />
+        <TextField fx:id="surname" layoutX="114.0" layoutY="107.0" prefHeight="26.0" prefWidth="201.0" promptText="Введите фамилию:" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #696969;" />
+        <Label layoutX="73.0" layoutY="219.0" text="Email">
+            <font>
+                <Font name="System Bold" size="12.0" />
+            </font>
+        </Label>
+        <TextField fx:id="login" layoutX="113.0" layoutY="143.0" prefHeight="26.0" prefWidth="201.0" promptText="Введите логин:" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #696969;" />
+        <TextField fx:id="password" layoutX="113.0" layoutY="179.0" prefHeight="26.0" prefWidth="201.0" promptText="Введите пароль:" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #696969;" />
+        <TextField fx:id="email" layoutX="112.0" layoutY="215.0" prefHeight="26.0" prefWidth="202.0" promptText="Введите Email" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #696969;" />
+        <Button layoutX="113.0" layoutY="266.0" mnemonicParsing="false" onAction="#registrate" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #696969;" text="Зарегистрироваться" underline="true">
+            <font>
+                <Font name="System Bold" size="12.0" />
+            </font>
+        </Button>
+        <Label layoutX="67.0" layoutY="147.0" text="Логин">
+            <font>
+                <Font name="System Bold" size="12.0" />
+            </font>
+        </Label>
+        <Label layoutX="61.0" layoutY="184.0" text="Пароль">
+            <font>
+                <Font name="System Bold" size="12.0" />
+            </font>
+        </Label>
+        <Separator layoutX="81.0" layoutY="48.0" prefWidth="200.0" />
+        <Button layoutX="262.0" layoutY="266.0" mnemonicParsing="false" onAction="#enter" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #696969;" text="Вход">
+            <font>
+                <Font name="System Bold" size="12.0" />
+            </font>
+        </Button>
+    </children>
+</AnchorPane>
+

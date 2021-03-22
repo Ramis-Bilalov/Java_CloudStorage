@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="498.0" prefWidth="669.0" style="-fx-background-color: #FAFAFA;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ClientController">
+    <children>
+        <Button layoutX="208.0" layoutY="36.0" mnemonicParsing="false" onAction="#upload" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #696969;" text="Upload">
+            <font>
+                <Font name="System Bold" size="12.0" />
+            </font></Button>
+        <Button layoutX="503.0" layoutY="461.0" mnemonicParsing="false" onAction="#delete" prefHeight="27.0" prefWidth="76.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #696969;" text="Удалить">
+            <font>
+                <Font name="System Bold" size="12.0" />
+            </font></Button>
+        <ListView fx:id="serverList" layoutX="340.0" layoutY="173.0" prefHeight="278.0" prefWidth="320.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #696969;">
+            <padding>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </padding></ListView>
+        <TextField fx:id="uploadFile" layoutX="10.0" layoutY="36.0" prefHeight="27.0" prefWidth="192.0" promptText="File name" style="-fx-background-radius: 5; -fx-border-color: #696969; -fx-border-radius: 5;" />
+        <ListView fx:id="clientList" layoutX="10.0" layoutY="173.0" prefHeight="278.0" prefWidth="320.0" style="-fx-border-radius: 5; -fx-background-radius: 5; -fx-border-color: #696969;">
+            <padding>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </padding></ListView>
+        <Button layoutX="10.0" layoutY="461.0" mnemonicParsing="false" onAction="#uploadFromClientToServer" prefHeight="27.0" prefWidth="320.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #696969;" text="Загрузить с клиента на сервер">
+            <font>
+                <Font name="System Bold" size="12.0" />
+            </font></Button>
+        <Button layoutX="584.0" layoutY="461.0" mnemonicParsing="false" onAction="#uploadFromServerToDesktop" prefHeight="27.0" prefWidth="76.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #696969;" text="Скачать">
+            <font>
+                <Font name="System Bold" size="12.0" />
+            </font></Button>
+        <Button layoutX="632.0" layoutY="36.0" mnemonicParsing="false" onAction="#createDirectory" prefHeight="27.0" prefWidth="28.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #696969;" text="+">
+            <font>
+                <Font name="System Bold" size="12.0" />
+            </font></Button>
+        <Button layoutX="421.0" layoutY="461.0" mnemonicParsing="false" onAction="#returnFromDirectory" prefHeight="27.0" prefWidth="77.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #696969;" text="Назад">
+            <font>
+                <Font name="System Bold" size="12.0" />
+            </font></Button>
+        <TextField fx:id="dirName" layoutX="512.0" layoutY="36.0" prefHeight="26.0" prefWidth="113.0" promptText="Directory name" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #696969;" />
+        <TextField fx:id="searchServer" layoutX="340.0" layoutY="136.0" prefHeight="27.0" prefWidth="256.0" promptText="File name" style="-fx-border-color: #696969; -fx-background-radius: 5; -fx-border-radius: 5;" />
+        <Button layoutX="603.0" layoutY="136.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="57.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #696969;" text="Найти">
+            <font>
+                <Font name="System Bold" size="12.0" />
+            </font>
+        </Button>
+        <MenuBar prefHeight="26.0" prefWidth="669.0" style="-fx-background-color: #e0e0e0; -fx-border-color: #696969;">
+            <menus>
+                <Menu mnemonicParsing="false" text="Главная">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#disconnect" text="Окно входа" />
+                        <MenuItem mnemonicParsing="false" onAction="#registrate" text="Регистрация" />
+                        <MenuItem mnemonicParsing="false" onAction="#toTrash" text="Корзина" />
+                        <MenuItem mnemonicParsing="false" onAction="#closeConnection" text="Выйти" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Редактирование">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Сортировка файлов" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Справка">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="О программе" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+        <Button layoutX="340.0" layoutY="461.0" mnemonicParsing="false" onAction="#toTrash" prefHeight="27.0" prefWidth="76.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #696969;" text="Корзина">
+            <font>
+                <Font name="System Bold" size="12.0" />
+            </font>
+        </Button>
+        <TextField fx:id="searchClient" layoutX="10.0" layoutY="136.0" prefHeight="27.0" prefWidth="256.0" promptText="File name" style="-fx-border-color: #696969; -fx-background-radius: 5; -fx-border-radius: 5;" />
+        <Button layoutX="273.0" layoutY="136.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="57.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #696969;" text="Найти">
+            <font>
+                <Font name="System Bold" size="12.0" />
+            </font>
+        </Button>
+        <Label layoutX="14.0" layoutY="63.0" text="My computer" textFill="DIMGRAY">
+            <font>
+                <Font name="GOST Type BU" size="52.0" />
+            </font>
+        </Label>
+        <Label layoutX="340.0" layoutY="63.0" text="Cloud storage" textFill="DIMGRAY">
+            <font>
+                <Font name="GOST Type BU" size="52.0" />
+            </font>
+        </Label>
+    </children>
+</AnchorPane>
