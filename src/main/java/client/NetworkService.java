@@ -2,23 +2,26 @@ package client;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 
-public class NetworkService {
+
+public class NetworkService implements Closeable{
 
     private static NetworkService instance;
-    private final ObjectInputStream is;
-    private final ObjectOutputStream os;
+    private final DataInputStream is;
+    private final DataOutputStream os;
     private Socket socket;
+    private byte[] buffer;
 
     private NetworkService() {
         try {
             socket = new Socket("localhost", 1234);
-            os = new ObjectOutputStream(socket.getOutputStream());
-            is = new ObjectInputStream(socket.getInputStream());
+            os = new DataOutputStream(socket.getOutputStream());
+            is = new DataInputStream(socket.getInputStream());
+            buffer = new byte[512];
         } catch (Exception e) {
             throw new RuntimeException("Couldn't create network connection");
         }
@@ -36,6 +39,7 @@ public class NetworkService {
     }
 
     public ObservableList<String> getFiles(String path) {
+
         ObservableList<String> observableList = FXCollections.observableArrayList();
         File folder = new File(path);
         File[] listOfFiles = folder.listFiles();
@@ -46,10 +50,29 @@ public class NetworkService {
         } return observableList;
     }
 
+    public void sendMessage(String msg) {
+        try {
+            os.write(msg.getBytes(StandardCharsets.UTF_8));
+            os.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String readMessage() {
+        String msg = "";
+        try {
+            int bytesRead = is.read(buffer);
+            msg = new String(buffer, 0, bytesRead, StandardCharsets.UTF_8);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return msg;
+    }
+
     public ObservableList<String> getDirectories(String path) {
         ObservableList<String> observableDirList = FXCollections.observableArrayList();
-        //File folder = new File(path);
-        //File[] listOfFiles = folder.listFiles();
         String[] listt = new File(String.valueOf(path)).list();
         for (String file : listt) {
             observableDirList.add(file);
@@ -81,7 +104,13 @@ public class NetworkService {
         } else System.out.println("This file is not exists");
     }
 
-    public ObjectInputStream getInputStream() {
+    public DataInputStream getInputStream() {
         return is;
+    }
+
+    @Override
+    public void close() throws IOException {
+        is.close();
+        os.close();
     }
 }

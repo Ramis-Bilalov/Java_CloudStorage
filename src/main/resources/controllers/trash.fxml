@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="498.0" prefWidth="334.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.TrashController">
+   <children>
+      <ListView fx:id="trashList" layoutX="9.0" layoutY="9.0" prefHeight="439.0" prefWidth="316.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #696969;" />
+      <Button layoutX="9.0" layoutY="455.0" mnemonicParsing="false" onAction="#deleteFinally" prefHeight="35.0" prefWidth="226.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #696969;" text="Удалить файл безвозвратно">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font></Button>
+      <Button layoutX="242.0" layoutY="455.0" mnemonicParsing="false" onAction="#goBack" prefHeight="35.0" prefWidth="82.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #696969;" text="Закрыть">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font></Button>
+   </children>
+</AnchorPane>
