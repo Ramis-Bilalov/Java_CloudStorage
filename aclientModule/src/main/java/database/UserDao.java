@@ -10,4 +10,8 @@ public interface UserDao {
 
     void registrateUser(String name, String surname, String login, String password, String email) throws SQLException;
 
+    void changePassword(String login, String oldPassword, String newPassword) throws SQLException;
+
+    void deleteAccount(String login) throws SQLException;
+
 }

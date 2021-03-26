@@ -6,6 +6,7 @@ import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
+import java.util.Arrays;
 
 
 public class NetworkService implements Closeable{
@@ -39,7 +40,6 @@ public class NetworkService implements Closeable{
     }
 
     public ObservableList<String> getFiles(String path) {
-
         ObservableList<String> observableList = FXCollections.observableArrayList();
         File folder = new File(path);
         File[] listOfFiles = folder.listFiles();
@@ -73,15 +73,14 @@ public class NetworkService implements Closeable{
 
     public ObservableList<String> getDirectories(String path) {
         ObservableList<String> observableDirList = FXCollections.observableArrayList();
-        String[] listt = new File(String.valueOf(path)).list();
-        for (String file : listt) {
-            observableDirList.add(file);
-        } return observableDirList;
+        String[] list = new File(String.valueOf(path)).list();
+        observableDirList.addAll(Arrays.asList(list));
+        return observableDirList;
     }
 
     public ObservableList<String> getSearchFiles(String path, String fileName) {
         ObservableList<String> observableDirList = FXCollections.observableArrayList();
-        String[] listt = new File(String.valueOf(path)).list();
+        String[] list = new File(String.valueOf(path)).list();
         observableDirList.add(fileName);
         return observableDirList;
     }
@@ -90,9 +89,11 @@ public class NetworkService implements Closeable{
         try {
             File file = new File(from + File.separator + fileName);
             if(file.exists()) {
-                if(!Files.exists(Path.of(to, fileName))) {
+                if(!Files.exists(Path.of(to, fileName)) && file.length() < 50000000) {
                     Files.copy(Path.of(from, fileName), Path.of(to, fileName), StandardCopyOption.REPLACE_EXISTING);
                     System.out.println("File " + fileName + " is uploaded from " + from + " to " + to);
+                } else if(file.length() > 50000000) {
+                    System.out.println("This file is very big");
                 }
             } if(!file.exists()) {
                 System.out.println("File " + fileName + " is not exists in " + from);

@@ -9,9 +9,12 @@ public class UserSQLiteDao implements UserDao, Closeable {
     private Connection connection;
     private PreparedStatement registrationStatement;
     private PreparedStatement userExistsStatement;
-    private PreparedStatement findEmail;
+    private PreparedStatement findEmailStatement;
+    private PreparedStatement changePassStatement;
+    private PreparedStatement deleteAccStatement;
     private static UserSQLiteDao instance;
     private String email;
+    private String login;
 
 
     public UserSQLiteDao() throws ClassNotFoundException, SQLException {
@@ -20,7 +23,9 @@ public class UserSQLiteDao implements UserDao, Closeable {
         try {
             userExistsStatement = connection.prepareStatement("SELECT NAME FROM USERS WHERE LOGIN = ? AND PASSWORD = ?;");
             registrationStatement = connection.prepareStatement("INSERT INTO USERS(name, surname, login, password, email) VALUES(?, ?, ?, ?, ?);");
-            findEmail = connection.prepareStatement("SELECT EMAIL FROM USERS WHERE LOGIN = ? AND PASSWORD = ?;");
+            findEmailStatement = connection.prepareStatement("SELECT EMAIL FROM USERS WHERE LOGIN = ? AND PASSWORD = ?;");
+            changePassStatement = connection.prepareStatement("UPDATE USERS SET PASSWORD = ? WHERE LOGIN = ? AND PASSWORD = ?;");
+            deleteAccStatement = connection.prepareStatement("DELETE FROM USERS WHERE LOGIN = ?;");
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -28,6 +33,10 @@ public class UserSQLiteDao implements UserDao, Closeable {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getLogin() {
+        return login;
     }
 
     public static UserSQLiteDao getInstance() throws SQLException, ClassNotFoundException {
@@ -41,9 +50,10 @@ public class UserSQLiteDao implements UserDao, Closeable {
     public boolean userExists(String login, String password) throws SQLException {
         userExistsStatement.setString(1, login);
         userExistsStatement.setString(2, password);
-        findEmail.setString(1, login);
-        findEmail.setString(2, password);
-        ResultSet resultSet1 = findEmail.executeQuery();
+        findEmailStatement.setString(1, login);
+        findEmailStatement.setString(2, password);
+        ResultSet resultSet1 = findEmailStatement.executeQuery();
+        this.login = login;
         email = resultSet1.getString(1);
         ResultSet resultSet = userExistsStatement.executeQuery();
         return resultSet.next();
@@ -60,11 +70,27 @@ public class UserSQLiteDao implements UserDao, Closeable {
     }
 
     @Override
+    public void changePassword(String login, String oldPassword, String newPassword) throws SQLException {
+        changePassStatement.setString(1, newPassword);
+        changePassStatement.setString(2, login);
+        changePassStatement.setString(3, oldPassword);
+        changePassStatement.execute();
+    }
+
+    @Override
+    public void deleteAccount(String login) throws SQLException {
+        deleteAccStatement.setString(1, login);
+        deleteAccStatement.execute();
+    }
+
+    @Override
     public void close() throws IOException {
         try {
             userExistsStatement.close();
             registrationStatement.close();
-            findEmail.close();
+            findEmailStatement.close();
+            changePassStatement.close();
+            deleteAccStatement.close();
             connection.close();
         } catch (SQLException throwables) {
             throwables.printStackTrace();

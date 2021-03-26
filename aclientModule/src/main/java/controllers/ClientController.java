@@ -4,7 +4,6 @@ import database.UserSQLiteDao;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -40,6 +39,7 @@ public class ClientController implements Initializable {
     public TextField searchServer;
     public TextField searchClient;
     Stage trashStage = new Stage();
+    Stage changePassStage = new Stage();
     String pathUsers = "aclientModule/src/main/resources/controllers/users";
     private final String pathNew = UserSQLiteDao.getInstance().getEmail();
 
@@ -222,5 +222,23 @@ public class ClientController implements Initializable {
                 return FileVisitResult.CONTINUE;
             }
         });
+    }
+
+    public void changePassword(ActionEvent actionEvent) throws IOException {
+        Parent change = FXMLLoader.load(getClass().getResource("changepassword.fxml"));
+        changePassStage.setTitle("Смена пароля");
+        changePassStage.setScene(new Scene(change));
+        changePassStage.setResizable(false);
+        changePassStage.show();
+    }
+
+    public void deleteAccount(ActionEvent actionEvent) throws IOException {
+        Parent change = FXMLLoader.load(getClass().getResource("deleteAccount.fxml"));
+        Stage stage = new Stage();
+        stage.setTitle("Удаление аккаунта");
+        stage.setScene(new Scene(change));
+        stage.setResizable(false);
+        stage.show();
+        dirName.getScene().getWindow().hide();
     }
 }
