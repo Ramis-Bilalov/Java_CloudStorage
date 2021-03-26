@@ -79,6 +79,13 @@ public class NetworkService implements Closeable{
         } return observableDirList;
     }
 
+    public ObservableList<String> getSearchFiles(String path, String fileName) {
+        ObservableList<String> observableDirList = FXCollections.observableArrayList();
+        String[] listt = new File(String.valueOf(path)).list();
+        observableDirList.add(fileName);
+        return observableDirList;
+    }
+
     public void sendFile(String fileName, String from, String to) {
         try {
             File file = new File(from + File.separator + fileName);

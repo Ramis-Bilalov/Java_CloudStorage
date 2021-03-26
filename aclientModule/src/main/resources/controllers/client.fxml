@@ -19,7 +19,7 @@
             <padding>
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </padding></ListView>
-        <TextField fx:id="uploadFile" layoutX="10.0" layoutY="36.0" prefHeight="27.0" prefWidth="192.0" promptText="File name" style="-fx-background-radius: 5; -fx-border-color: #696969; -fx-border-radius: 5;" />
+        <TextField fx:id="uploadFile" layoutX="10.0" layoutY="36.0" prefHeight="27.0" prefWidth="192.0" promptText="Upload file name" style="-fx-background-radius: 5; -fx-border-color: #696969; -fx-border-radius: 5;" />
         <ListView fx:id="clientList" layoutX="10.0" layoutY="173.0" prefHeight="278.0" prefWidth="320.0" style="-fx-border-radius: 5; -fx-background-radius: 5; -fx-border-color: #696969;">
             <padding>
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -41,8 +41,8 @@
                 <Font name="System Bold" size="12.0" />
             </font></Button>
         <TextField fx:id="dirName" layoutX="512.0" layoutY="36.0" prefHeight="26.0" prefWidth="113.0" promptText="Directory name" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #696969;" />
-        <TextField fx:id="searchServer" layoutX="340.0" layoutY="136.0" prefHeight="27.0" prefWidth="256.0" promptText="File name" style="-fx-border-color: #696969; -fx-background-radius: 5; -fx-border-radius: 5;" />
-        <Button layoutX="603.0" layoutY="136.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="57.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #696969;" text="Найти">
+        <TextField fx:id="searchServer" layoutX="340.0" layoutY="136.0" prefHeight="27.0" prefWidth="256.0" promptText="Search file name on cloud" style="-fx-border-color: #696969; -fx-background-radius: 5; -fx-border-radius: 5;" />
+        <Button layoutX="603.0" layoutY="136.0" mnemonicParsing="false" onAction="#searchOnCloud" prefHeight="27.0" prefWidth="57.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #696969;" text="Найти">
             <font>
                 <Font name="System Bold" size="12.0" />
             </font>
@@ -57,16 +57,6 @@
                         <MenuItem mnemonicParsing="false" onAction="#closeConnection" text="Выйти" />
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Редактирование">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="Сортировка файлов" />
-                    </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Справка">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="О программе" />
-                    </items>
-                </Menu>
             </menus>
         </MenuBar>
         <Button layoutX="340.0" layoutY="461.0" mnemonicParsing="false" onAction="#toTrash" prefHeight="27.0" prefWidth="76.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #696969;" text="Корзина">
@@ -74,8 +64,8 @@
                 <Font name="System Bold" size="12.0" />
             </font>
         </Button>
-        <TextField fx:id="searchClient" layoutX="10.0" layoutY="136.0" prefHeight="27.0" prefWidth="256.0" promptText="File name" style="-fx-border-color: #696969; -fx-background-radius: 5; -fx-border-radius: 5;" />
-        <Button layoutX="273.0" layoutY="136.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="57.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #696969;" text="Найти">
+        <TextField fx:id="searchClient" layoutX="10.0" layoutY="136.0" prefHeight="27.0" prefWidth="256.0" promptText="Search file name on computer" style="-fx-border-color: #696969; -fx-background-radius: 5; -fx-border-radius: 5;" />
+        <Button layoutX="273.0" layoutY="136.0" mnemonicParsing="false" onAction="#searchOnComputer" prefHeight="27.0" prefWidth="57.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #696969;" text="Найти">
             <font>
                 <Font name="System Bold" size="12.0" />
             </font>

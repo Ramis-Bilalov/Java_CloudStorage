@@ -21,6 +21,9 @@ public class AuthController implements Initializable {
     public PasswordField password;
     TrashController trashController = new TrashController();
 
+    public AuthController() throws SQLException, ClassNotFoundException {
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
     }
@@ -32,7 +35,7 @@ public class AuthController implements Initializable {
             System.out.println("правильный пароль");
             Parent client = FXMLLoader.load(getClass().getResource("client.fxml"));
             Stage stage = new Stage();
-            stage.setTitle("CloudStorage - Облачное хранилище данных");
+            stage.setTitle("CloudStorage - Облачное хранилище данных       Аккаунт:  " + UserSQLiteDao.getInstance().getEmail());
             stage.setScene(new Scene(client));
             stage.setResizable(false);
             stage.show();

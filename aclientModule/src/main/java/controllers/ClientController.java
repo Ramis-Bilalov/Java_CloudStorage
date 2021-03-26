@@ -1,8 +1,10 @@
 package controllers;
 
+import database.UserSQLiteDao;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -14,10 +16,15 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class ClientController implements Initializable {
@@ -33,16 +40,21 @@ public class ClientController implements Initializable {
     public TextField searchServer;
     public TextField searchClient;
     Stage trashStage = new Stage();
+    String pathUsers = "aclientModule/src/main/resources/controllers/users";
+    private final String pathNew = UserSQLiteDao.getInstance().getEmail();
+
+    public ClientController() throws SQLException, ClassNotFoundException {
+    }
 
 
     public void upload(ActionEvent actionEvent) throws IOException {
-        NetworkService.getInstance().sendFile(uploadFile.getText(), "client", path);
+        NetworkService.getInstance().sendFile(uploadFile.getText(), pathUsers + File.separator + pathNew + File.separator + "client", path);
         uploadFile.clear();
         refreshLists();
     }
 
     public void delete(ActionEvent actionEvent) throws IOException, InterruptedException {
-        NetworkService.getInstance().sendFile(serverList.getSelectionModel().getSelectedItem(), path, "servertrash");
+        NetworkService.getInstance().sendFile(serverList.getSelectionModel().getSelectedItem(), path, pathUsers + File.separator + pathNew + File.separator + "servertrash");
         NetworkService.getInstance().deleteFile(serverList.getSelectionModel().getSelectedItem(), path);
         refreshLists();
         if(trashStage.isShowing()) {
@@ -64,7 +76,7 @@ public class ClientController implements Initializable {
 
     public void refreshLists() {
         try {
-            clientList.setItems(NetworkService.getInstance().getDirectories("client"));
+            clientList.setItems(NetworkService.getInstance().getDirectories(pathUsers + File.separator + pathNew + File.separator + "client"));
             serverList.setItems(NetworkService.getInstance().getDirectories(path));
         } catch (NullPointerException n) {
             n.printStackTrace();
@@ -72,48 +84,48 @@ public class ClientController implements Initializable {
     }
 
     public void uploadFromClientToServer(ActionEvent actionEvent) {
-        NetworkService.getInstance().sendFile((String) clientList.getSelectionModel().getSelectedItem(), "client", path);
+        NetworkService.getInstance().sendFile((String) clientList.getSelectionModel().getSelectedItem(), pathUsers + File.separator + pathNew + File.separator + "client", path);
         refreshLists();
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        if (!Files.exists(Path.of("client"))) {
+        if (!Files.exists(Path.of(pathUsers, pathNew, "client"))) {
             try {
-                Files.createDirectories(Path.of("client"));
+                Files.createDirectories(Path.of(pathUsers, pathNew, "client"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        if (!Files.exists(Path.of("server"))) {
+        if (!Files.exists(Path.of(pathUsers, pathNew, "server"))) {
             try {
-                Files.createDirectories(Path.of("server"));
+                Files.createDirectories(Path.of(pathUsers, pathNew, "server"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        if (!Files.exists(Path.of("desktop"))) {
+        if (!Files.exists(Path.of(pathUsers, pathNew, "desktop"))) {
             try {
-                Files.createDirectories(Path.of("desktop"));
+                Files.createDirectories(Path.of(pathUsers, pathNew, "desktop"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        if(!Files.exists(Path.of("servertrash"))) {
+        if(!Files.exists(Path.of(pathUsers, pathNew, "servertrash"))) {
             try {
-                Files.createDirectories(Path.of("servertrash"));
+                Files.createDirectories(Path.of(pathUsers, pathNew, "servertrash"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
         try {
-            observableClientList.addAll(NetworkService.getInstance().getFiles("client"));
-            observableServerList.addAll(NetworkService.getInstance().getDirectories("server"));
+            observableClientList.addAll(NetworkService.getInstance().getFiles(pathUsers + File.separator + pathNew + File.separator + "client"));
+            observableServerList.addAll(NetworkService.getInstance().getDirectories(pathUsers + File.separator + pathNew + File.separator + "server"));
         } catch (NullPointerException n) {
             n.printStackTrace();
         }
 
-        path = "server";
+        path = pathUsers + File.separator + pathNew + File.separator + "server";
         serverList.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
             @Override
@@ -136,15 +148,15 @@ public class ClientController implements Initializable {
     }
 
     public void uploadFromServerToDesktop(ActionEvent actionEvent) {
-        NetworkService.getInstance().sendFile(serverList.getSelectionModel().getSelectedItem(), path, "desktop");
+        NetworkService.getInstance().sendFile(serverList.getSelectionModel().getSelectedItem(), path, pathUsers + File.separator + pathNew + File.separator + "desktop");
         refreshLists();
     }
 
     public void returnFromDirectory(ActionEvent actionEvent) {
         try {
-            clientList.setItems(NetworkService.getInstance().getDirectories("client"));
-            serverList.setItems(NetworkService.getInstance().getDirectories("server"));
-            path = "server";
+            clientList.setItems(NetworkService.getInstance().getDirectories(pathUsers + File.separator + pathNew + File.separator + "client"));
+            serverList.setItems(NetworkService.getInstance().getDirectories(pathUsers + File.separator + pathNew + File.separator + "server"));
+            path = pathUsers + File.separator + pathNew + File.separator + "server";
         } catch (NullPointerException n) {
             n.printStackTrace();
         }
@@ -181,5 +193,34 @@ public class ClientController implements Initializable {
         stage.setResizable(false);
         stage.show();
         dirName.getScene().getWindow().hide();
+    }
+
+    public void searchOnCloud(ActionEvent actionEvent) throws IOException {
+        Files.walkFileTree(Path.of(pathUsers, pathNew, "server"), new SimpleFileVisitor<>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                if(file.getFileName().toString().contains(searchServer.getText())) {
+                    System.out.println(file.getFileName() + " is founded. Path: " + file.getParent());
+                    serverList.setItems(NetworkService.getInstance().getSearchFiles(String.valueOf(file.getParent()), String.valueOf(file.getFileName())));
+                    path = String.valueOf(file.getParent());
+                    return FileVisitResult.TERMINATE;
+                }
+                return FileVisitResult.CONTINUE;
+            }
+        });
+    }
+
+    public void searchOnComputer(ActionEvent actionEvent) throws IOException {
+        Files.walkFileTree(Path.of(pathUsers, pathNew, "client"), new SimpleFileVisitor<>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                if(file.getFileName().toString().contains(searchClient.getText())) {
+                    System.out.println(file.getFileName() + " is founded. Path: " + file.getParent());
+                    clientList.setItems(NetworkService.getInstance().getSearchFiles(String.valueOf(file.getParent()), String.valueOf(file.getFileName())));
+                    return FileVisitResult.TERMINATE;
+                }
+                return FileVisitResult.CONTINUE;
+            }
+        });
     }
 }

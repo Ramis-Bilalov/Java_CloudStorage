@@ -3,15 +3,15 @@ package database;
 import java.io.Closeable;
 import java.io.IOException;
 import java.sql.*;
-import java.time.LocalDate;
-import java.util.Date;
 
 public class UserSQLiteDao implements UserDao, Closeable {
 
     private Connection connection;
     private PreparedStatement registrationStatement;
     private PreparedStatement userExistsStatement;
+    private PreparedStatement findEmail;
     private static UserSQLiteDao instance;
+    private String email;
 
 
     public UserSQLiteDao() throws ClassNotFoundException, SQLException {
@@ -20,9 +20,14 @@ public class UserSQLiteDao implements UserDao, Closeable {
         try {
             userExistsStatement = connection.prepareStatement("SELECT NAME FROM USERS WHERE LOGIN = ? AND PASSWORD = ?;");
             registrationStatement = connection.prepareStatement("INSERT INTO USERS(name, surname, login, password, email) VALUES(?, ?, ?, ?, ?);");
+            findEmail = connection.prepareStatement("SELECT EMAIL FROM USERS WHERE LOGIN = ? AND PASSWORD = ?;");
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public static UserSQLiteDao getInstance() throws SQLException, ClassNotFoundException {
@@ -36,6 +41,10 @@ public class UserSQLiteDao implements UserDao, Closeable {
     public boolean userExists(String login, String password) throws SQLException {
         userExistsStatement.setString(1, login);
         userExistsStatement.setString(2, password);
+        findEmail.setString(1, login);
+        findEmail.setString(2, password);
+        ResultSet resultSet1 = findEmail.executeQuery();
+        email = resultSet1.getString(1);
         ResultSet resultSet = userExistsStatement.executeQuery();
         return resultSet.next();
     }
@@ -55,6 +64,7 @@ public class UserSQLiteDao implements UserDao, Closeable {
         try {
             userExistsStatement.close();
             registrationStatement.close();
+            findEmail.close();
             connection.close();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
