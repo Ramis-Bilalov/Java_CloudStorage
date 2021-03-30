@@ -17,7 +17,6 @@ public class FileHandler extends SimpleChannelInboundHandler<String> {
                 .replace("\r", "")
                 .replace("\n", "");
         if (command.equals("ls")) {
-            System.out.println("Сервер принял");
             File file = new File("server");
             File[] files = file.listFiles();
             StringBuffer sb = new StringBuffer();

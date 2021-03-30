@@ -64,10 +64,10 @@ public class ClientController implements Initializable {
 
     public void disconnect(ActionEvent actionEvent) throws IOException {
         NetworkService.getInstance().closeConnect();
-        Parent reg = FXMLLoader.load(getClass().getResource("auth.fxml"));
+        Parent auth = FXMLLoader.load(getClass().getResource("auth.fxml"));
         Stage stage = new Stage();
         stage.setTitle("CloudStorage - Авторизация");
-        stage.setScene(new Scene(reg));
+        stage.setScene(new Scene(auth));
         stage.setResizable(false);
         stage.show();
         dirName.getScene().getWindow().hide();
@@ -171,11 +171,11 @@ public class ClientController implements Initializable {
     }
 
     public void toTrash() throws IOException {
-        Parent reg = FXMLLoader.load(getClass().getResource("trash.fxml"));
+        Parent trash = FXMLLoader.load(getClass().getResource("trash.fxml"));
         trashStage.setTitle("CloudStorage - Корзина");
         trashStage.setX(1100);
         trashStage.setY(96);
-        trashStage.setScene(new Scene(reg));
+        trashStage.setScene(new Scene(trash));
         trashStage.setResizable(false);
         trashStage.show();
     }
@@ -185,13 +185,14 @@ public class ClientController implements Initializable {
         Platform.exit();
     }
 
-    public void registrate(ActionEvent actionEvent) throws IOException {
+    public void register(ActionEvent actionEvent) throws IOException {
         Parent reg = FXMLLoader.load(getClass().getResource("registration.fxml"));
         Stage stage = new Stage();
         stage.setTitle("CloudStorage - Регистрация");
         stage.setScene(new Scene(reg));
         stage.setResizable(false);
         stage.show();
+        this.trashStage.close();
         dirName.getScene().getWindow().hide();
     }
 

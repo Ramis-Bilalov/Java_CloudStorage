@@ -52,7 +52,7 @@
                 <Menu mnemonicParsing="false" text="Главная">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#disconnect" text="Окно входа" />
-                        <MenuItem mnemonicParsing="false" onAction="#registrate" text="Регистрация" />
+                        <MenuItem mnemonicParsing="false" onAction="#register" text="Регистрация" />
                         <MenuItem mnemonicParsing="false" onAction="#toTrash" text="Корзина" />
                         <MenuItem mnemonicParsing="false" onAction="#changePassword" text="Смена пароля" />
                         <MenuItem mnemonicParsing="false" onAction="#deleteAccount" text="Удалить аккаунт" />

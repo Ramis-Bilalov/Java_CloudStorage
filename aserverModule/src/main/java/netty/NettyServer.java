@@ -23,9 +23,9 @@ public class NettyServer {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
                             ch.pipeline().addLast(
-                                    new StringDecoder(), // in-1
-                                    new StringEncoder(), // out-1
-                                    new FileHandler() // in-2
+                                    new StringDecoder(),
+                                    new StringEncoder(),
+                                    new FileHandler()
                             );
                         }
                     });

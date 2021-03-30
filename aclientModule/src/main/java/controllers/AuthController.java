@@ -55,7 +55,7 @@ public class AuthController implements Initializable {
         }
     }
 
-    public void registrate(ActionEvent actionEvent) throws IOException {
+    public void register(ActionEvent actionEvent) throws IOException {
         Parent reg = FXMLLoader.load(getClass().getResource("registration.fxml"));
         Stage stage = new Stage();
         stage.setTitle("CloudStorage - Регистрация");

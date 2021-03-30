@@ -61,10 +61,10 @@ public class RegistrationController {
         try {
             if(!name.getText().equals("") && !surname.getText().equals("") && !login.getText().equals("") && !password.getText().equals("") && !email.getText().equals("")) {
                 UserSQLiteDao.getInstance().registrateUser(name.getText(), surname.getText(), login.getText(), password.getText(), email.getText());
-                Parent reg = FXMLLoader.load(getClass().getResource("auth.fxml"));
+                Parent auth = FXMLLoader.load(getClass().getResource("auth.fxml"));
                 Stage stage = new Stage();
                 stage.setTitle("Авторизация");
-                stage.setScene(new Scene(reg));
+                stage.setScene(new Scene(auth));
                 stage.setResizable(false);
                 stage.show();
                 login.getScene().getWindow().hide();
@@ -75,10 +75,10 @@ public class RegistrationController {
     }
 
     public void enter(ActionEvent actionEvent) throws IOException {
-        Parent reg = FXMLLoader.load(getClass().getResource("auth.fxml"));
+        Parent auth = FXMLLoader.load(getClass().getResource("auth.fxml"));
         Stage stage = new Stage();
         stage.setTitle("Авторизация");
-        stage.setScene(new Scene(reg));
+        stage.setScene(new Scene(auth));
         stage.setResizable(false);
         stage.show();
         login.getScene().getWindow().hide();
