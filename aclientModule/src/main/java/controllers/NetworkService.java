@@ -39,6 +39,8 @@ public class NetworkService implements Closeable{
         socket.close();
     }
 
+    // ObservableList для добавления в ListView элементов
+
     public ObservableList<String> getFiles(String path) {
         ObservableList<String> observableList = FXCollections.observableArrayList();
         File folder = new File(path);
@@ -70,6 +72,8 @@ public class NetworkService implements Closeable{
         }
         return msg;
     }
+
+    // ObservableList для добавления в ListView элементов
 
     public ObservableList<String> getDirectories(String path) {
         ObservableList<String> observableDirList = FXCollections.observableArrayList();

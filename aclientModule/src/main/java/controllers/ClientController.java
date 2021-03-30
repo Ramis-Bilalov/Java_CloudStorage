@@ -46,12 +46,15 @@ public class ClientController implements Initializable {
     public ClientController() throws SQLException, ClassNotFoundException {
     }
 
+    // Скачивание файла с клиента по названию файла(набором текста в текстовом поле)
 
     public void upload(ActionEvent actionEvent) throws IOException {
         NetworkService.getInstance().sendFile(uploadFile.getText(), pathUsers + File.separator + pathNew + File.separator + "client", path);
         uploadFile.clear();
         refreshLists();
     }
+
+    // Удаление файла с сервера, либо с корзины
 
     public void delete(ActionEvent actionEvent) throws IOException, InterruptedException {
         NetworkService.getInstance().sendFile(serverList.getSelectionModel().getSelectedItem(), path, pathUsers + File.separator + pathNew + File.separator + "servertrash");
@@ -61,6 +64,8 @@ public class ClientController implements Initializable {
             toTrash();
         }
     }
+
+    // Выход в окно авторизации
 
     public void disconnect(ActionEvent actionEvent) throws IOException {
         NetworkService.getInstance().closeConnect();
@@ -74,6 +79,8 @@ public class ClientController implements Initializable {
         this.trashStage.close();
     }
 
+    // Обновление листов клиента и сервера
+
     public void refreshLists() {
         try {
             clientList.setItems(NetworkService.getInstance().getDirectories(pathUsers + File.separator + pathNew + File.separator + "client"));
@@ -83,6 +90,9 @@ public class ClientController implements Initializable {
         }
     }
 
+    // Скачивание файлов с клиента на сервер посредством
+    // выбора из listview и нажатием кнопки "Загрузить с клиента на сервер"
+
     public void uploadFromClientToServer(ActionEvent actionEvent) {
         NetworkService.getInstance().sendFile((String) clientList.getSelectionModel().getSelectedItem(), pathUsers + File.separator + pathNew + File.separator + "client", path);
         refreshLists();
@@ -90,7 +100,7 @@ public class ClientController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        if (!Files.exists(Path.of(pathUsers, pathNew, "client"))) {
+        if (!Files.exists(Path.of(pathUsers, pathNew, "client"))) {     // Если папки не существуют
             try {
                 Files.createDirectories(Path.of(pathUsers, pathNew, "client"));
             } catch (IOException e) {
@@ -147,10 +157,14 @@ public class ClientController implements Initializable {
 
     }
 
+    // Скачивание с сервера на папку в компьютере
+
     public void uploadFromServerToDesktop(ActionEvent actionEvent) {
         NetworkService.getInstance().sendFile(serverList.getSelectionModel().getSelectedItem(), path, pathUsers + File.separator + pathNew + File.separator + "desktop");
         refreshLists();
     }
+
+    // Вернутся в корневую директорию
 
     public void returnFromDirectory(ActionEvent actionEvent) {
         try {
@@ -162,6 +176,8 @@ public class ClientController implements Initializable {
         }
     }
 
+    // Создание директории
+
     public void createDirectory(ActionEvent actionEvent) throws IOException {
         if(!Files.exists(Path.of(path, dirName.getText()))) {
             Files.createDirectories(Path.of(path, dirName.getText()));
@@ -169,6 +185,8 @@ public class ClientController implements Initializable {
         }
         refreshLists();
     }
+
+    // Закинуть файл в корзину
 
     public void toTrash() throws IOException {
         Parent trash = FXMLLoader.load(getClass().getResource("trash.fxml"));
@@ -180,10 +198,15 @@ public class ClientController implements Initializable {
         trashStage.show();
     }
 
+
+    // Выйти из приложения полностью
+
     public void closeConnection(ActionEvent actionEvent) throws IOException {
         NetworkService.getInstance().closeConnect();
         Platform.exit();
     }
+
+    // Перейти в окно регистрации
 
     public void register(ActionEvent actionEvent) throws IOException {
         Parent reg = FXMLLoader.load(getClass().getResource("registration.fxml"));
@@ -195,6 +218,8 @@ public class ClientController implements Initializable {
         this.trashStage.close();
         dirName.getScene().getWindow().hide();
     }
+
+    // Поиск файла на облаке, поиск посредством набора части названия
 
     public void searchOnCloud(ActionEvent actionEvent) throws IOException {
         Files.walkFileTree(Path.of(pathUsers, pathNew, "server"), new SimpleFileVisitor<>() {
@@ -211,6 +236,8 @@ public class ClientController implements Initializable {
         });
     }
 
+    // // Поиск файла на клиенте, поиск посредством набора части названия
+
     public void searchOnComputer(ActionEvent actionEvent) throws IOException {
         Files.walkFileTree(Path.of(pathUsers, pathNew, "client"), new SimpleFileVisitor<>() {
             @Override
@@ -225,6 +252,8 @@ public class ClientController implements Initializable {
         });
     }
 
+    // Изменение пароля аккаунта
+
     public void changePassword(ActionEvent actionEvent) throws IOException {
         Parent change = FXMLLoader.load(getClass().getResource("changepassword.fxml"));
         changePassStage.setTitle("Смена пароля");
@@ -232,6 +261,8 @@ public class ClientController implements Initializable {
         changePassStage.setResizable(false);
         changePassStage.show();
     }
+
+    // Удаление аккаунта
 
     public void deleteAccount(ActionEvent actionEvent) throws IOException {
         Parent change = FXMLLoader.load(getClass().getResource("deleteAccount.fxml"));

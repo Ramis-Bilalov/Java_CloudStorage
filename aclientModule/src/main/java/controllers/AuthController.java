@@ -28,6 +28,8 @@ public class AuthController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
     }
 
+    // Вход в аккаунт, если пароль и логин совпадают с данными в БД
+
     public void enter(ActionEvent actionEvent) throws IOException, SQLException, ClassNotFoundException {
         boolean auth = false;
         auth = UserSQLiteDao.getInstance().userExists(login.getText(), password.getText());
@@ -54,6 +56,8 @@ public class AuthController implements Initializable {
             password.setPromptText("WRONG PASSWORD");
         }
     }
+
+    // Вход в регистрацию
 
     public void register(ActionEvent actionEvent) throws IOException {
         Parent reg = FXMLLoader.load(getClass().getResource("registration.fxml"));

@@ -7,9 +7,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.sql.SQLException;
+
+// Контроллер окна удаления аккаунта
 
 public class DeleteAccountController {
 
@@ -18,6 +19,8 @@ public class DeleteAccountController {
 
     public DeleteAccountController() throws SQLException, ClassNotFoundException {
     }
+
+    // Удаляет аккаунт и переходит в окно авторизации
 
     public void deleteAccount(ActionEvent actionEvent) throws SQLException, ClassNotFoundException, IOException {
         UserSQLiteDao.getInstance().deleteAccount(login);
@@ -29,6 +32,8 @@ public class DeleteAccountController {
         stage.setResizable(false);
         stage.show();
     }
+
+    // Закрывает окно удаления аккаунта и переходит в приложения т.е. ОТМЕНА
 
     public void noDeleteAccount(ActionEvent actionEvent) throws IOException, SQLException, ClassNotFoundException {
         Parent change = FXMLLoader.load(getClass().getResource("client.fxml"));

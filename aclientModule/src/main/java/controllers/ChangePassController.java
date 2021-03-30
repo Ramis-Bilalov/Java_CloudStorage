@@ -17,6 +17,8 @@ public class ChangePassController {
     }
 
 
+// Изменение пароля действующего аккаунта
+
     public void changePassword(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
         if(newPass.getText().equals(repeatNewPass.getText())) {
             UserSQLiteDao.getInstance().changePassword(login, oldPass.getText(), newPass.getText());

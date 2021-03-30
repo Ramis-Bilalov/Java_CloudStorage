@@ -7,6 +7,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+// Запуск графического приложения
+
 public class CloudStorageApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
