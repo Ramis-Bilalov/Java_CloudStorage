@@ -4,13 +4,13 @@
 **Java Fx работает с 11-й версией Java**
 **Используется БД SQLite**
 ____
-####ЗАПУСК JAR
-#####Через терминал:
+#### ЗАПУСК JAR
+##### Через терминал:
 **Server**
-java -jar serverWD.jar
+###### java -jar serverWD.jar
 **Client**
-java --module-path "O:\AndroidProject\Java_CloudStorage1\aclientModule\src\main\resources\controllers\SDK\openjfx-11.0.2_windows-x64_bin-sdk\javafx-sdk-11.0.2\lib" --add-modules javafx.controls,javafx.fxml -jar clientWD.jar
-java --module-path "путь скопировать с помощью COPY PATH - Absolute Path и вставить между кавычками находится в aclientModule\src\main\resources\controllers\SDK\openjfx-11.0.2_windows-x64_bin-sdk\javafx-sdk-11.0.2\lib" -jar clientWD.jar
+###### java --module-path "O:\AndroidProject\Java_CloudStorage1\aclientModule\src\main\resources\controllers\SDK\openjfx-11.0.2_windows-x64_bin-sdk\javafx-sdk-11.0.2\lib" --add-modules javafx.controls,javafx.fxml -jar clientWD.jar
+###### java --module-path "путь скопировать с помощью COPY PATH - Absolute Path и вставить между кавычками находится в aclientModule\src\main\resources\controllers\SDK\openjfx-11.0.2_windows-x64_bin-sdk\javafx-sdk-11.0.2\lib" -jar clientWD.jar
 
 #### Данные для входа
 **Логин:ramis**
