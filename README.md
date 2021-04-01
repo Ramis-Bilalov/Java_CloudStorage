@@ -1,21 +1,23 @@
--Приложение работает на 11-ой Java и Project language level 11 
--Java Fx работает с 11 джавой
--БД SQLite
+## Java CloudStorage
 
-:::ЗАПУСК JAR:::
-Через терминал: 
-[Server]
-java -jar serverWD.jar
-[Client]
-java --module-path "O:\AndroidProject\Java_CloudStorage1\aclientModule\src\main\resources\controllers\SDK\openjfx-11.0.2_windows-x64_bin-sdk\javafx-sdk-11.0.2\lib" --add-modules javafx.controls,javafx.fxml -jar clientWD.jar
-java --module-path "путь скопировать с помощью COPY PATH - Absolute Path и вставить между кавычками находится в aclientModule\src\main\resources\controllers\SDK\openjfx-11.0.2_windows-x64_bin-sdk\javafx-sdk-11.0.2\lib" -jar clientWD.jar
+*Приложение работает на 11-ой Java и Project language level 11*
+*Java Fx работает с 11-й версией Java*
+*Используется БД SQLite*
 
-:::Данные для входа:::
-Логин:ramis
-Пароль:11111
+###ЗАПУСК JAR
+#####Через терминал: 
+*Server*
+######java -jar serverWD.jar
+*Client*
+######java --module-path "O:\AndroidProject\Java_CloudStorage1\aclientModule\src\main\resources\controllers\SDK\openjfx-11.0.2_windows-x64_bin-sdk\javafx-sdk-11.0.2\lib" --add-modules javafx.controls,javafx.fxml -jar clientWD.jar
+######java --module-path "путь скопировать с помощью COPY PATH - Absolute Path и вставить между кавычками находится в aclientModule\src\main\resources\controllers\SDK\openjfx-11.0.2_windows-x64_bin-sdk\javafx-sdk-11.0.2\lib" -jar clientWD.jar
+
+*:::Данные для входа:::*
+*Логин:ramis*
+*Пароль:11111*
 
 
-Кнопки в основном окне приложения:
+*Кнопки в основном окне приложения:*
 -Кнопка [Upload] загружает файл по имени файла с клиента,
 загружает файл в ту директорию в какой находится сервер
 -Кнопка [Загрузить с клиента на сервер] загружает файл выбором из ListView
@@ -31,7 +33,7 @@ java --module-path "путь скопировать с помощью COPY PATH 
 -Кнопка [Корзина] открывает корзину
 -Кнопка [Удалить файл безвозвратно] удалить файл с концами из корзины
 
-Меню бар в окне приложения:
+*Меню бар в окне приложения:*
 -Пункт [Окно входа] переход в окно в авторизации
 -Пункт [Регистрация] переход в окно регистрации
 -Пункт [Корзина] открывает корзину
@@ -40,17 +42,17 @@ java --module-path "путь скопировать с помощью COPY PATH 
 -Пункт [Выйти] закрывает приложение
 
 
-[-Реализовал:]
-подключение через Netty сервер+
-копирование, перемещение, удаление, cоздание папок +
-загрузка, скачивание файлов+
-AA аутентификация и авторизация+
-корзина+
-смена пароля, удаление аккаунта +
-поиск файлов +
-ограничение на размер +
-сортировка файлов +
-1 репозиторий - 1 юзер +
+###Реализовано
+*-подключение через Netty сервер+*
+*-копирование, перемещение, удаление, cоздание папок+*
+*-загрузка, скачивание файлов+*
+*-AA аутентификация и авторизация+*
+*-корзина+*
+*-смена пароля, удаление аккаунта+*
+*-поиск файлов+*
+*-ограничение на размер+*
+*-сортировка файлов+*
+*-1 репозиторий - 1 юзер+*
 
 
 
