@@ -11,12 +11,12 @@ ____
 * Client    
 **java --module-path "O:\AndroidProject\Java_CloudStorage1\aclientModule\src\main\resources\controllers\SDK\openjfx-11.0.2_windows-x64_bin-sdk\javafx-sdk-11.0.2\lib" --add-modules javafx.controls,javafx.fxml -jar clientWD.jar**    
 **java --module-path "путь скопировать с помощью COPY PATH - Absolute Path и вставить между кавычками находится в aclientModule\src\main\resources\controllers\SDK\openjfx-11.0.2_windows-x64_bin-sdk\javafx-sdk-11.0.2\lib" -jar clientWD.jar**    
-
+___
 #### Данные для входа
 **Логин: ramis**    
 **Пароль: 11111**    
 
-
+___
 #### Кнопки в основном окне приложения:
 * Кнопка **Upload** загружает файл по имени файла с клиента,
 загружает файл в ту директорию в какой находится сервер    
@@ -33,6 +33,7 @@ ____
 * Кнопка **Корзина** открывает корзину    
 * Кнопка **Удалить файл безвозвратно** удалить файл с концами из корзины    
 
+___
 #### Меню бар в окне приложения:
 * Пункт **Окно входа** переход в окно в авторизации    
 * Пункт **Регистрация** переход в окно регистрации    
@@ -41,7 +42,7 @@ ____
 * Пункт **Удаление аккаунта** удаляет аккаунта    
 * Пункт **Выйти** закрывает приложение    
 
-
+___
 #### Реализовано:
 :white_check_mark: подключение через Netty сервер    
 :white_check_mark: копирование, перемещение, удаление, cоздание папок    
