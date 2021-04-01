@@ -1,8 +1,8 @@
 ## Java CloudStorage
 
-*Приложение работает на 11-ой Java и Project language level 11*
-*Java Fx работает с 11-й версией Java*
-*Используется БД SQLite*
+#####Приложение работает на 11-ой Java и Project language level 11
+#####Java Fx работает с 11-й версией Java
+#####Используется БД SQLite
 
 ###ЗАПУСК JAR
 #####Через терминал: 
